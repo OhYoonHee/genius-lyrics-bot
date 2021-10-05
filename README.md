@@ -1,6 +1,6 @@
 ## Genius Lyrics Bot
 
-See in GAS IDE : https://script.google.com/home/projects/1qwheRVgESInU2H6zZyuK0-Mfu6cWXF3Kx4LH5bjHuQYtowhwHFrKPvGE/edit \
+See in GAS IDE : https://script.google.com/home/projects/1qwheRVgESInU2H6zZyuK0-Mfu6cWXF3Kx4LH5bjHuQYtowhwHFrKPvGE/edit
 
 ## Structure
 File structure should now look like this::
