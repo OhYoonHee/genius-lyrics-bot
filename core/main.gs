@@ -3,12 +3,15 @@
 const genius = new Genius();
 const start_regex = new RegExp("/" + "start" + `(?:@${BOT_USERNAME})?` + "(?:[\\s\\n]|$)?([\\s\\S]+)?$", "i");
 
-function startHandler(ctx) {
-  if (Boolean(ctx.payload) == false || ctx.payload.trim() == "start") {
-    /*ctx.replyWithSticker('CAACAgIAAxkBAAIBD2FanZDIXEXq6Z2ULK-0uL2Z8N-5AAI_FAACwB0YSB5bNn8gQBvmIQQ', {
-      reply_to_message_id: ctx.message.message_id,
-      allow_sending_without_reply: true
-    });*/
+bot.hears(start_regex, (ctx) => {
+  let payload = ctx.match[1];
+  if (Boolean(payload) == false || payload.trim() == "start") {
+    if (STICKER_FILE_ID) {
+      ctx.replyWithSticker(STICKER_FILE_ID, {
+        reply_to_message_id: ctx.message.message_id,
+        allow_sending_without_reply: true
+      });
+    }
     let pesan = "Hai! perkenalkan nama saya <b>Genius Lyrics Bot</b>\nSaya dibuat untuk mempermudah anda mencari lirik di <a href=\"https://genius.com\">Genius Lyrics</a>";
     pesan += "\n\nSilakan kirim judul lagu yang anda ingin cari ke saya, saya juga berfungsi pada mode inline";
     pesan += "\n\nJika anda menemukan bugs silakan laporkan ke group saya";
@@ -20,14 +23,14 @@ function startHandler(ctx) {
     return;
   }
 
-  const id = ctx.payload;
+  const id = payload;
   let hasil = genius.getInfobyId(id.trim());
 
   if (hasil == false) {
-    /*ctx.replyWithSticker('CAACAgIAAxkBAAIBD2FanZDIXEXq6Z2ULK-0uL2Z8N-5AAI_FAACwB0YSB5bNn8gQBvmIQQ', {
+    ctx.replyWithSticker('CAACAgIAAxkBAAIBD2FanZDIXEXq6Z2ULK-0uL2Z8N-5AAI_FAACwB0YSB5bNn8gQBvmIQQ', {
       reply_to_message_id: ctx.message.message_id,
       allow_sending_without_reply: true
-    });*/
+    });
     let pesan = "Hai! perkenalkan nama saya <b>Genius Lyrics Bot</b>\nSaya dibuat untuk mempermudah anda mencari lirik di <a href=\"https://genius.com\">Genius Lyrics</a>";
     pesan += "\n\nSilakan kirim judul lagu yang anda ingin cari ke saya, saya juga berfungsi pada mode inline";
     pesan += "\n\nJika anda menemukan bugs silakan laporkan ke group saya";
@@ -51,20 +54,20 @@ function startHandler(ctx) {
   if (lyrics == false) return;
   lyrics += `\n\nFetched using @${BOT_USERNAME}\nJoin @${CHANNEL_UPDATE} for updates`;
   return ctx.reply(lyrics, { reply_to_message_id: ctx.message.message_id, allow_sending_without_reply: true });
-};
+});
 
-bot.start(startHandler)
-
-bot.on("text", function (ctx) {
-
-  if (start_regex.test(ctx.message.text)) {
-    return;
+bot.command('file_id', (ctx) => {
+  if (ctx.message.reply_to_message) {
+    if (ctx.message.reply_to_message.sticker) {
+      let { file_id } = ctx.message.reply_to_message.sticker;
+      let message = `Sticker file id is: <pre>${file_id}</pre>`
+      ctx.reply(message, { parse_mode: "HTML", reply_to_message_id: ctx.message.message_id, allow_sending_without_reply: true })
+      return
+    }
   }
+});
 
-  if (/^\/debug$/.exec(ctx.message.text)) {
-    return ctx.reply(JSON.stringify(ctx.message, null, 2))
-  }
-  
+bot.on(":text", function (ctx) {
   try {
     const search_song = genius.search(ctx.message.text);
     if (search_song == false) {
@@ -152,3 +155,5 @@ bot.on('inline_query', function (ctx) {
   }));
   return ctx.answerInlineQuery(results, { is_personal: true });
 });
+
+var middleware = bot.middleware();
