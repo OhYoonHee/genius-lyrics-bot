@@ -9,7 +9,7 @@ GeniusLyricsBot library source code : [Github](https://github.com/OhYoonHee/geni
 * create `code.gs` file and write like this
 ```js
 const OWNER_ID = 123; // <-- fill you telegram user id
-GeniusLyricsBot.BOT_TOKEN = "SD_GeniusLyricsBot"; // <-- fill you telegram bot username
+GeniusLyricsBot.BOT_USERNAME = "SD_GeniusLyricsBot"; // <-- fill you telegram bot username
 const BOT_TOKEN = "YOUR_BOT_TOKEN"; // <-- fill you telegram bot token, get it at @BotFather
 const bot = new lumpia.init(BOT_TOKEN);
 
